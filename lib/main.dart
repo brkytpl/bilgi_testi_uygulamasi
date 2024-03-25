@@ -1,4 +1,3 @@
-
 import 'package:bilgi_testi/test_veri.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +13,9 @@ class BilgiTesti extends StatelessWidget {
             backgroundColor: Colors.indigo[700],
             body: SafeArea(
                 child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: SoruSayfasi(),
-            ))));
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: SoruSayfasi(),
+                ))));
   }
 }
 
@@ -27,10 +26,39 @@ class SoruSayfasi extends StatefulWidget {
 
 class _SoruSayfasiState extends State<SoruSayfasi> {
   List<Widget> secimler = [];
- TestVeri test_1=TestVeri();
+  TestVeri test_1 = TestVeri();
+
+  void butonFonksiyonu(bool secilenButon) {
+    if (test_1.testBittiMi() == true) {
+      showDialog(context: context, builder: (BuildContext context) {
+        return AlertDialog(title: new Text('Bravo testi bitirdiniz'),
+            //content: new Text('gagsg body'),
+            actions: <Widget>[new MaterialButton(onPressed: ()
+        {
+          Navigator.of(context).pop();
+          setState(() {test_1.testiSifirla();
+          secimler = [];
+
+          });
+        },
+        child:new Text('Başa Dön'),)
+        ],
+        );
 
 
+      });
 
+    }
+    else {
+      setState(() {
+        test_1.getSoruYaniti() == false
+            ? secimler.add(kDogruIconu)
+            : secimler.add(kYanlisIconu);
+
+        test_1.sonrakiSoru();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,17 +105,7 @@ class _SoruSayfasiState extends State<SoruSayfasi> {
                             size: 30.0,
                           ),
                           onPressed: () {
-                            setState(() {
-                              test_1.getSoruYaniti()==false
-                                  ? secimler.add(kDogruIconu)
-                                  : secimler.add(kYanlisIconu);
-                              // if (dogruYanit == false) {
-                              //   secimler.add(kDogruIconu);
-                              // } else {
-                              //   secimler.add(kYanlisIconu);
-                              // }
-                               test_1.sonrakiSoru();
-                            });
+                            butonFonksiyonu(false);
                           },
                         ))),
                 Expanded(
@@ -99,12 +117,7 @@ class _SoruSayfasiState extends State<SoruSayfasi> {
                           color: Colors.green[400],
                           child: Icon(Icons.thumb_up, size: 30.0),
                           onPressed: () {
-                            setState(() {
-                              test_1.getSoruYaniti()==true
-                                  ? secimler.add(kDogruIconu)
-                                  : secimler.add(kYanlisIconu);
-                              test_1.sonrakiSoru();
-                            });
+                            butonFonksiyonu(true);
                           },
                         ))),
               ])),
@@ -113,5 +126,3 @@ class _SoruSayfasiState extends State<SoruSayfasi> {
     );
   }
 }
-
-
